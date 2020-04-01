@@ -1,0 +1,105 @@
+[sniffer]
+# Database type. As of now only MySQL is supported
+Database = "MySQL"
+
+# Port to sniff
+ListenPort = 3306
+
+# interface to listen on (ex: eth0, eth1, bond0 etc)
+ListenInterface = "eth0"
+
+# The max payload of TCP is 64K, but it will be a big CPU overhead to capture 64K.
+# The capture length can be reduced (most of the queries won't take full payload length) to suit your query length
+CaptureLength = 8192
+
+# You can get packets bigger than the capture length and logging the number of such packets helps us in tuning the capture length.
+# You can also get number of aborted connections due to timeout, reset connections etc
+# Print such instances every ReportStatsInterval seconds
+ReportStatsInterval = 60
+
+# Comma separated list of IPs to be ignored from sniffing
+IgnoreIPs = ""
+
+[qan-agent]
+# Comma separated debug levels
+# Example:
+# DebugLevels = "2,3,4,5,9,10"
+# 1 - Processed query info, this can be used if you do not send results to remote server
+# 2 - Source, Query, Query Time
+# 3 - Queries greater than capture length
+# 4 - User and connection related information, memory related info
+# 5 - MySQL packet info
+# 6 - Query Response info
+# 7 - Orphan packets garbage collection information
+# 8 - Orphan packets garbage collection detailed information
+# 9 - Access denied requests
+# 10 - Processlist
+DebugLevels = ""
+
+# If the query is bigger than MaxRequestLength, it will be ignored. Probably it is a huge insert
+MaxRequestLength = 524288
+
+# Maximum number of db connections. This decides the connection buffer for qan agent. Buffer will be set to 1.5 times the max connections. It is fine to have connections to db more than what is specified here.
+MaxDBConnections = 1024
+
+# Send the query report to remote server every ReportInterval seconds
+ReportInterval = 300
+
+# Log file to print
+LogFile = "/var/log/qan.log"
+
+[localDB]
+# Some connections might have been established before the sniffer was started.
+# It is not possbile to get those connection details like user and db
+# Enabling this agent connects to the local database, checks the processlist and gets the user and db info
+Enabled = 0
+
+# Username to connect to the local database
+LocalUsername = "xxxx"
+
+# Password to connect to the local database
+LocalPassword = "xxxx"
+
+# Socket to connect to the local database
+LocalSocket = "/var/lib/mysql/mysql.sock"
+
+### Send the query reports to remote database server
+[remoteDB]
+Enabled = 0
+
+# remote database hostname to send results to. If it is IPv6, enclose with [] example: [::1]
+Hostname = ""
+
+# remote database port to send results to
+Port = 3306
+
+# remote database username to send results to
+Username = "xxxx"
+
+# remote database password to send results to
+Password = "xxxx"
+
+# remote database name to send results to
+DBName = "query_analyzer"
+
+# Sample query is the query which took maximum time for that fingerprint.
+# Sample query contains data. If you do not want to send data, disable this
+IncludeSample = 1
+
+# send the reports over SSL
+# 0 - disabled
+# 1 - enabled with skip verify
+# 2 - self signed SSL certificates taken from Ca_cert, Client_cert, Client_key config
+# 3 - SSL certificates taken from Ca_cert, Client_cert, Client_key config
+SSLEnabled = 1
+
+# SSL certificate details
+Ca_cert = ""
+Client_cert = ""
+Client_key = ""
+
+### post to remote API instead of remote database (not implemented yet)
+[remoteAPI]
+Enabled = 0
+URL = "https://xxxx"
+apikey = "xxxx"
