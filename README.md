@@ -7,7 +7,7 @@ Query Analyzer Agent runs on the database server. It captures all the queries by
 Query Analyzer Agent is written in Go, so before you get started you should [install and setup Go](https://golang.org/doc/install). You can also follow the steps here to install and setup Go.
 ```
 $ wget https://dl.google.com/go/go1.14.linux-amd64.tar.gz
-$ tar -C /usr/local -xzf go1.14.linux-amd64.tar.gz
+$ sudo tar -C /usr/local -xzf go1.14.linux-amd64.tar.gz
 $ mkdir ~/projects
 $ export PATH=$PATH:/usr/local/go/bin
 $ export GOPATH=~/projects
@@ -99,7 +99,7 @@ mysql> CREATE TABLE IF NOT EXISTS `query_analyzer`.`query_history` (
  PARTITION pMAX VALUES LESS THAN (MAXVALUE) ENGINE = InnoDB) */;
 /* You can use different partition scheme based on your retention */
 
-mysql> CREATE USER 'qan_rw'@'qan_agent_ip' IDENTIFIED BY 'Complex_P@ssw0rd';
+mysql> CREATE USER /*!50706 IF NOT EXISTS*/ 'qan_rw'@'qan_agent_ip' IDENTIFIED BY 'Complex_P@ssw0rd';
 
 mysql> GRANT SELECT, INSERT, UPDATE ON `query_analyzer`.* TO 'qan_rw'@'qan_agent_ip';
 ```
