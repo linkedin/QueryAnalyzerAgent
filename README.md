@@ -137,6 +137,9 @@ Password = "Complex_P@ssw0rd"
 DBName = "query_analyzer"
 ```
 
+If user and db details of connection are needed, create a user to connect to the local database and update the localDB section. Create user SQL can be found at local_database/users.sql
+
+
 ## Running Query Analyzer Agent
 ```
 Since the agent sniffs the network interface, it should have net_raw capability.

@@ -338,12 +338,10 @@ func processPayload(src *string, request bool, packet gopacket.Packet, isRST boo
 						if Params.QanAgent.DebugMap[7] {
 							log.Printf("Length of Query Hashmap after cleanup: %d\n******************************\n", len(MySQLProtocol.SourceMap))
 						}
-						// If entries in MySQLProtocol.SourceMap get deleted, the user and db information is lost. You can optionally uncomment these lines and repopulate the user and db information from the processlist.
-						/*
-						if Params.LocalDB.Enabled == 1 {
+						// If entries in MySQLProtocol.SourceMap get deleted, the user and db information is lost. LocalDB.Enabled = 2 repopulates the user and db information from the processlist.
+						if Params.LocalDB.Enabled == 2 {
 							MySQLProtocol.GetProcesslist()
 						}
-						*/
 					}
 				}
 			} else {
@@ -662,7 +660,7 @@ func main() {
 	if Params.Sniffer.ReportStatsInterval > 0 {
 		go logStats()
 	}
-	if Params.LocalDB.Enabled == 1 {
+	if Params.LocalDB.Enabled >= 1 {
 		MySQLProtocol.GetProcesslist()
 	}
 	StartSniffer(ipaddrs)

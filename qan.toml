@@ -49,13 +49,14 @@ ReportInterval = 300
 LogFile = "/var/log/qan.log"
 
 [localDB]
-# Some connections might have been established before the sniffer was started.
-# It is not possbile to get those connection details like user and db
-# Enabling this agent connects to the local database, checks the processlist and gets the user and db info
+# Some connections might have been established before the sniffer was started. It is not possbile to get those connection details like user and db. If enabled, agent connects to the local database, checks the processlist and gets the user and db info
+# 0 - Do not check processlist
+# 1 - Check processlist only once at startup
+# 2 - Check processlist as and when required
 Enabled = 0
 
 # Username to connect to the local database
-LocalUsername = "xxxx"
+LocalUsername = "qan_ro"
 
 # Password to connect to the local database
 LocalPassword = "xxxx"
@@ -74,7 +75,7 @@ Hostname = ""
 Port = 3306
 
 # remote database username to send results to
-Username = "xxxx"
+Username = "qan_rw"
 
 # remote database password to send results to
 Password = "xxxx"
