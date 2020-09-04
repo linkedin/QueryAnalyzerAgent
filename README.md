@@ -18,11 +18,11 @@ Query Analyzer Agent requires the following external libraries
 - pcap.h (provided by libpcap-dev package), gcc or build-essential for building this package
     - RHEL/CentOs/Fedora:
       ```
-      $ sudo yum install gcc libpcap libpcap-devel
+      $ sudo yum install gcc libpcap libpcap-devel git
       ```
     - Debian/Ubuntu:
       ```
-      $ sudo apt-get install build-essential libpcap-dev
+      $ sudo apt-get install build-essential libpcap-dev git
       ```
 - [Go-MySQL-Driver](https://github.com/go-sql-driver/mysql)
   ```
@@ -54,9 +54,9 @@ Query Analyzer Agent either prints the aggregated queries to a local log file or
 
 Execute the following SQL statements on the remote database server.
 ```
-mysql> CREATE DATABASE IF NOT EXISTS `query_analyzer`;
+CREATE DATABASE IF NOT EXISTS `query_analyzer`;
 
-mysql> CREATE TABLE IF NOT EXISTS `query_analyzer`.`query_info` (
+CREATE TABLE IF NOT EXISTS `query_analyzer`.`query_info` (
   `hostname` varchar(64) NOT NULL DEFAULT '',
   `checksum` char(16) NOT NULL DEFAULT '',
   `fingerprint` longtext NOT NULL,
@@ -74,7 +74,7 @@ mysql> CREATE TABLE IF NOT EXISTS `query_analyzer`.`query_info` (
   KEY `checksum` (`checksum`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=4;
 
-mysql> CREATE TABLE IF NOT EXISTS `query_analyzer`.`query_history` (
+CREATE TABLE IF NOT EXISTS `query_analyzer`.`query_history` (
   `hostname` varchar(64) NOT NULL DEFAULT '',
   `checksum` char(16) NOT NULL DEFAULT '',
   `src` varchar(39) NOT NULL DEFAULT '',
@@ -90,18 +90,20 @@ mysql> CREATE TABLE IF NOT EXISTS `query_analyzer`.`query_history` (
   KEY `covering` (`hostname`,`ts`,`querytime`,`count`,`bytes`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 /*!50100 PARTITION BY RANGE (TO_DAYS(ts))
-(PARTITION p202002 VALUES LESS THAN (TO_DAYS('2020-03-01')) ENGINE = InnoDB,
- PARTITION p202003 VALUES LESS THAN (TO_DAYS('2020-04-01')) ENGINE = InnoDB,
- PARTITION p202004 VALUES LESS THAN (TO_DAYS('2020-05-01')) ENGINE = InnoDB,
+(PARTITION p202004 VALUES LESS THAN (TO_DAYS('2020-05-01')) ENGINE = InnoDB,
  PARTITION p202005 VALUES LESS THAN (TO_DAYS('2020-06-01')) ENGINE = InnoDB,
  PARTITION p202006 VALUES LESS THAN (TO_DAYS('2020-07-01')) ENGINE = InnoDB,
  PARTITION p202007 VALUES LESS THAN (TO_DAYS('2020-08-01')) ENGINE = InnoDB,
+ PARTITION p202008 VALUES LESS THAN (TO_DAYS('2020-09-01')) ENGINE = InnoDB,
+ PARTITION p202009 VALUES LESS THAN (TO_DAYS('2020-10-01')) ENGINE = InnoDB,
+ PARTITION p202010 VALUES LESS THAN (TO_DAYS('2020-11-01')) ENGINE = InnoDB,
+ PARTITION p202011 VALUES LESS THAN (TO_DAYS('2020-12-01')) ENGINE = InnoDB,
  PARTITION pMAX VALUES LESS THAN (MAXVALUE) ENGINE = InnoDB) */;
 /* You can use different partition scheme based on your retention */
 
-mysql> CREATE USER /*!50706 IF NOT EXISTS*/ 'qan_rw'@'qan_agent_ip' IDENTIFIED BY 'Complex_P@ssw0rd';
+CREATE USER /*!50706 IF NOT EXISTS*/ 'qan_rw'@'qan_agent_ip' IDENTIFIED BY 'Complex_P@ssw0rd';
 
-mysql> GRANT SELECT, INSERT, UPDATE ON `query_analyzer`.* TO 'qan_rw'@'qan_agent_ip';
+GRANT SELECT, INSERT, UPDATE ON `query_analyzer`.* TO 'qan_rw'@'qan_agent_ip';
 ```
 The above SQLs can be found in remote_database/remote_schema.sql and remote_database/users.sql files.
 
